@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+/* Paleta do design system Oxygeni. */
+@theme {
+  --color-primary-50: #fdfdfd;
+  --color-primary-100: #f6f6f6;
+  --color-primary-200: #e6e6e6;
+  --color-primary-300: #919192;
+  --color-primary-400: #ebf3ff;
+  --color-primary-500: #0747de;
+  --color-primary-550: #002c57;
+  --color-primary-600: #383839;
+
+  --color-secondary-lightyellow: #fff3e7;
+  --color-secondary-yellow: #d68b00;
+  --color-secondary-lightgreen: #ebfbee;
+  --color-secondary-green: #05842b;
+  --color-secondary-lightred: #ffeeea;
+  --color-secondary-red: #ba2f2a;
+
+  /*
+   * Animações. Só animam opacity/transform (baratas para a GPU).
+   * Para escalonar uma lista, use style={{ animationDelay: "120ms" }}.
+   */
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-fade-in: fade-in 0.4s ease-out both;
+  --animate-fade-up: fade-up 0.6s var(--ease-out-expo) both;
+  --animate-scale-in: scale-in 0.5s var(--ease-out-expo) both;
+  --animate-pop-in: pop-in 0.18s var(--ease-out-expo) both;
+  --animate-shake: shake 0.4s ease-in-out;
+  --animate-shimmer: shimmer 1.4s ease-in-out infinite;
+  --animate-gauge: gauge 1.4s var(--ease-out-expo) 0.2s both;
+  --animate-progress: progress 1.1s ease-in-out infinite;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+  }
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.94);
+    }
+  }
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px) scale(0.97);
+    }
+  }
+  @keyframes shake {
+    25% {
+      transform: translateX(-4px);
+    }
+    75% {
+      transform: translateX(4px);
+    }
+  }
+  @keyframes shimmer {
+    from {
+      background-position: 100% 0;
+    }
+    to {
+      background-position: 0 0;
+    }
+  }
+  @keyframes progress {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(300%);
+    }
+  }
+  /* O valor final vem do stroke-dashoffset do próprio elemento. */
+  @keyframes gauge {
+    from {
+      stroke-dashoffset: 100;
+    }
+  }
+}
+
+@theme inline {
+  --font-sans: var(--font-dm-sans);
+}
+
+/* Bloco cinza com brilho deslizante, usado pelos skeletons de carregamento. */
+@utility skeleton {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-primary-200) 30%,
+    var(--color-primary-100) 50%,
+    var(--color-primary-200) 70%
+  );
+  background-size: 300% 100%;
+  animation: var(--animate-shimmer);
+}
+
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary-200) transparent;
+}
+
+html {
+  font-size: 16px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: var(--color-primary-50);
+  color: var(--color-primary-600);
+  /* O mapa ocupa a tela toda: sem rolagem nem "puxar para atualizar". */
+  overscroll-behavior: none;
+}
+
+/* Rótulos posicionados sobre a cena 3D. */
+.map-label {
+  transition: opacity 0.25s ease-out;
+  user-select: none;
+}
+
+/* Com a câmera longe, só os rótulos importantes continuam visíveis. */
+html[data-zoom="far"] .map-label[data-minor] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Quem prefere menos movimento vê tudo no estado final, sem animação. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
